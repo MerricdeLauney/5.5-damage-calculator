@@ -1,4 +1,3 @@
-import pprint
 import random
 from typing import List
 
@@ -42,10 +41,15 @@ class Creature:
             return []
         dead_foes = []
         for attack in self.attacks:
-            attack_roll = random.randint(1,20) + attack.attack_bonus
-            print(f'{self.name} attacks, {attack_roll} to hit')
-            if attack_roll >= foe.armor_class:
-                damage = sum([random.randint(1,die_type) for die_type in attack.attack_damage_dice]) + attack.attack_damage_bonus
+            attack_roll = random.randint(1,20)
+            to_hit = attack_roll + attack.attack_bonus
+            print(f'{self.name} attacks, {to_hit} to hit')
+            if to_hit >= foe.armor_class:
+                dice_damage = sum([random.randint(1,die_type) for die_type in attack.attack_damage_dice])
+                if attack_roll == 20:
+                    print('crit!')
+                    dice_damage += sum([random.randint(1,die_type) for die_type in attack.attack_damage_dice]) # roll again for crit
+                damage = dice_damage + attack.attack_damage_bonus
                 print(f'{damage} damage')
                 foe.health -= damage
                 if foe.health <= 0:

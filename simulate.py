@@ -42,10 +42,10 @@ class Creature:
             return []
         dead_foes = []
         for attack in self.attacks:
-            attack_roll = random.randrange(1,20) + attack.attack_bonus
+            attack_roll = random.randint(1,20) + attack.attack_bonus
             print(f'{self.name} attacks, {attack_roll} to hit')
             if attack_roll >= foe.armor_class:
-                damage = sum([random.randrange(1,die_type) for die_type in attack.attack_damage_dice]) + attack.attack_damage_bonus
+                damage = sum([random.randint(1,die_type) for die_type in attack.attack_damage_dice]) + attack.attack_damage_bonus
                 print(f'{damage} damage')
                 foe.health -= damage
                 if foe.health <= 0:
@@ -62,10 +62,10 @@ class Creature:
 def simuate(player: Creature, monsters: List[Creature]):
     # roll initiative
     turns = []
-    player.initiative = random.randrange(1,20) + player.initiative_bonus
+    player.initiative = random.randint(1,20) + player.initiative_bonus
 
     for monster in monsters:
-        monster.initiative = random.randrange(1,20) + monster.initiative_bonus
+        monster.initiative = random.randint(1,20) + monster.initiative_bonus
 
     turns = [player] + monsters
     turns.sort(key=lambda creature: creature.initiative ,reverse=True)

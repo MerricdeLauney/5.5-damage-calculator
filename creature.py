@@ -14,6 +14,7 @@ class Creature:
     target_advantage = bool
     origin_disadvantage = bool
     target_disadvantage = bool
+    total_damage_dealt = int
 
     def __init__(
         self,
@@ -36,12 +37,13 @@ class Creature:
         self.target_advantage = target_advantage
         self.origin_disadvantage = origin_disadvantage
         self.target_disadvantage = target_disadvantage
+        self.total_damage_dealt = 0
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
 
     def quick_stats(self):
-        return f"""name: {self.name}, health: {self.health}"""
+        return f"""name: {self.name}, health: {self.health}, damage_dealt: {self.total_damage_dealt}"""
 
     # determine the attack roll acouting for origin and sources conditions
     def calculate_roll_against(self, target_creature) -> int:
@@ -88,6 +90,7 @@ class Creature:
                         ]
                     )  # roll again for crit
                 damage = dice_damage + attack.attack_damage_bonus
+                self.total_damage_dealt += damage
                 print(f"{damage} damage")
                 foe.health -= damage
                 if foe.health <= 0:

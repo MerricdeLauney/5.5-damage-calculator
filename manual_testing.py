@@ -1,9 +1,12 @@
-from creature import Creature
-from attack import Attack
-from simulate import simulate
+import sys
+print(sys.path)
+
+from src.damage_calculator.attack import Attack
+from src.damage_calculator.creature import Creature
+from src.damage_calculator.simulate import simulate
 
 # create our players
-# lvl 3 rogue weilding a longbow and steady aim
+# lvl 3 rogue weilding a rapier and steady aim
 rogue_attacks = [Attack(5, 3, [8, 6, 6])]
 rogue = Creature("player", 5, rogue_attacks, 24, 16, origin_advantage=True)
 

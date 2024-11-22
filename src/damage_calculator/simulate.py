@@ -2,7 +2,6 @@ import random
 from typing import List
 from creature import Creature
 
-
 def simulate(player: Creature, monsters: List[Creature]):
     # roll initiative
     turns = []
@@ -15,26 +14,28 @@ def simulate(player: Creature, monsters: List[Creature]):
     turns.sort(key=lambda creature: creature.initiative, reverse=True)
 
     # begin fight
+    rounds = 0
     while True:
         for creature in turns:
             print(f"{creature.name}s turn!")
             if creature.name == "player":
-                killed = creature.attack(monsters)
+                killed = creature.take_attacks(monsters)
                 for dead in killed:
                     turns.remove(dead)
                     monsters.remove(dead)
                 if not monsters:
                     print("all monsters dead")
                     print(player.quick_stats())
-                    return
+                    return rounds
             else:
-                killed = creature.attack([player])
+                killed = creature.take_attacks([player])
                 if killed:  # player was killed
                     print("player was killed")
                     print("remaining monsters:")
                     for monster in monsters:
                         print(monster.quick_stats())
-                    return
+                    return rounds
+        rounds += 1
         print("round complete")
         for creature in turns:
             print(creature.quick_stats())

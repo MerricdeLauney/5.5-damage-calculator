@@ -1,7 +1,6 @@
 import random
-from attack import Attack
+from src.damage_calculator.attack import Attack
 from typing import List
-
 
 class Creature:
     name = str
@@ -63,7 +62,7 @@ class Creature:
             return random.randint(1, 20)
 
     # simulates making all the attacks and returns the list of foes killed this turn
-    def attack(self, foes: List) -> List:
+    def take_attacks(self, foes: List) -> List:
         foes_iter = iter(foes)
         try:
             foe = next(foes_iter)
@@ -74,22 +73,9 @@ class Creature:
             attack_roll = self.calculate_roll_against(foe)
             to_hit = attack_roll + attack.attack_bonus
             print(f"{self.name} attacks, {to_hit} to hit")
-            if to_hit >= foe.armor_class:
-                dice_damage = sum(
-                    [
-                        random.randint(1, die_type)
-                        for die_type in attack.attack_damage_dice
-                    ]
-                )
-                if attack_roll == 20:
-                    print("crit!")
-                    dice_damage += sum(
-                        [
-                            random.randint(1, die_type)
-                            for die_type in attack.attack_damage_dice
-                        ]
-                    )  # roll again for crit
-                damage = dice_damage + attack.attack_damage_bonus
+            crit = to_hit == 20
+            if crit or to_hit >= foe.armor_class:
+                damage = self.roll_damage(attack, foe)
                 self.total_damage_dealt += damage
                 print(f"{damage} damage")
                 foe.health -= damage
@@ -102,3 +88,27 @@ class Creature:
             else:
                 print("miss")
         return dead_foes
+    
+
+    # def roll_attack(self, attack, foe):
+    #     attack_roll = self.calculate_roll_against(foe)
+    #     to_hit = attack_roll + attack.attack_bonus
+    #     print(f"{self.name} attacks, {to_hit} to hit")
+    #     return 
+    
+
+    def roll_damage(self, attack, crit):
+        dice_damage = sum(
+            [ random.randint(1, die_type)for die_type in attack.attack_damage_dice ]
+        )
+        if crit:
+            print("crit!")
+            dice_damage += sum(
+                [
+                    random.randint(1, die_type)
+                    for die_type in attack.attack_damage_dice
+                ]
+            )  # roll again for crit
+    
+        return dice_damage + attack.attack_damage_bonus
+        

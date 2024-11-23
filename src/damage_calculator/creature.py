@@ -2,6 +2,7 @@ import random
 from src.damage_calculator.attack import Attack
 from typing import List
 
+
 class Creature:
     name = str
     initiative_bonus = 0
@@ -73,9 +74,9 @@ class Creature:
             attack_roll = self.calculate_roll_against(foe)
             to_hit = attack_roll + attack.attack_bonus
             print(f"{self.name} attacks, {to_hit} to hit")
-            crit = to_hit == 20
+            crit = attack_roll == 20
             if crit or to_hit >= foe.armor_class:
-                damage = self.roll_damage(attack, foe)
+                damage = self.roll_damage(attack, crit)
                 self.total_damage_dealt += damage
                 print(f"{damage} damage")
                 foe.health -= damage
@@ -88,27 +89,21 @@ class Creature:
             else:
                 print("miss")
         return dead_foes
-    
 
     # def roll_attack(self, attack, foe):
     #     attack_roll = self.calculate_roll_against(foe)
     #     to_hit = attack_roll + attack.attack_bonus
     #     print(f"{self.name} attacks, {to_hit} to hit")
-    #     return 
-    
+    #     return
 
     def roll_damage(self, attack, crit):
         dice_damage = sum(
-            [ random.randint(1, die_type)for die_type in attack.attack_damage_dice ]
+            [random.randint(1, die_type) for die_type in attack.attack_damage_dice]
         )
         if crit:
             print("crit!")
             dice_damage += sum(
-                [
-                    random.randint(1, die_type)
-                    for die_type in attack.attack_damage_dice
-                ]
+                [random.randint(1, die_type) for die_type in attack.attack_damage_dice]
             )  # roll again for crit
-    
+
         return dice_damage + attack.attack_damage_bonus
-        
